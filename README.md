@@ -1,6 +1,6 @@
 # BigQuery Performance & Cost Optimization Agent
 
-[![CI Workflow](https://github.com/vimalsagar007/bigqueryExample/actions/workflows/ci.yml/badge.svg)](https://github.com/vimalsagar007/bigqueryExample/actions)
+[![CI Workflow](https://github.com/vimalsagar007/bigquery-performance-cost-optimization-agent/actions/workflows/ci.yml/badge.svg)](https://github.com/vimalsagar007/bigquery-performance-cost-optimization-agent/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
 [![Cloud Run Live](https://img.shields.io/badge/Cloud%20Run-Live-success.svg)](https://bq-agent-61256100941.us-central1.run.app/docs)
