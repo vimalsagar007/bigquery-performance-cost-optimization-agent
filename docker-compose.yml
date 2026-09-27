@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  bq-optimizer-agent:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - GOOGLE_CLOUD_PROJECT=${GOOGLE_CLOUD_PROJECT:-qwiklabs-gcp-02-63b2f55175ee}
+      - GOOGLE_CLOUD_LOCATION=${GOOGLE_CLOUD_LOCATION:-us-central1}
+      - GOOGLE_GENAI_USE_VERTEXAI=true
+      - BQ_REGION=${BQ_REGION:-US}
+      - BQ_ON_DEMAND_PRICE_PER_TB=6.25
+    volumes:
+      - ~/.config/gcloud:/root/.config/gcloud:ro
+    restart: unless-stopped

@@ -1,0 +1,142 @@
+[
+  {
+    "id": 1,
+    "sql": "SELECT * FROM `bigquery-public-data.usa_names.usa_1910_current`",
+    "expected_anti_pattern": "SELECT *",
+    "expected_category": "COST",
+    "expected_rule_id": "RULE_001_SELECT_STAR"
+  },
+  {
+    "id": 2,
+    "sql": "SELECT * FROM `bigquery-public-data.usa_names.usa_1910_current` LIMIT 10",
+    "expected_anti_pattern": "SELECT * LIMIT",
+    "expected_category": "COST",
+    "expected_rule_id": "RULE_002_SELECT_STAR_LIMIT"
+  },
+  {
+    "id": 3,
+    "sql": "SELECT a.name, b.name FROM `bigquery-public-data.usa_names.usa_1910_current` a CROSS JOIN `bigquery-public-data.usa_names.usa_1910_current` b",
+    "expected_anti_pattern": "CROSS JOIN",
+    "expected_category": "PERFORMANCE",
+    "expected_rule_id": "RULE_010_CROSS_JOIN"
+  },
+  {
+    "id": 4,
+    "sql": "SELECT DISTINCT state, gender, COUNT(*) FROM `bigquery-public-data.usa_names.usa_1910_current` GROUP BY state, gender",
+    "expected_anti_pattern": "Redundant DISTINCT",
+    "expected_category": "PERFORMANCE",
+    "expected_rule_id": "RULE_012_REDUNDANT_DISTINCT"
+  },
+  {
+    "id": 5,
+    "sql": "SELECT name, state, number FROM `bigquery-public-data.usa_names.usa_1910_current` ORDER BY number DESC",
+    "expected_anti_pattern": "ORDER BY without LIMIT",
+    "expected_category": "PERFORMANCE",
+    "expected_rule_id": "RULE_011_UNNECESSARY_ORDER_BY"
+  },
+  {
+    "id": 6,
+    "sql": "SELECT state, name FROM `bigquery-public-data.usa_names.usa_1910_current` WHERE LOWER(state) = 'ca'",
+    "expected_anti_pattern": "Non-Sargable Predicate",
+    "expected_category": "PERFORMANCE",
+    "expected_rule_id": "RULE_021_NON_SARGABLE_PATTERN"
+  },
+  {
+    "id": 7,
+    "sql": "SELECT (SELECT COUNT(DISTINCT name) FROM `bigquery-public-data.usa_names.usa_1910_current`), (SELECT COUNT(DISTINCT name) FROM `bigquery-public-data.usa_names.usa_1910_current`)",
+    "expected_anti_pattern": "Repeated Subquery",
+    "expected_category": "COST",
+    "expected_rule_id": "RULE_013_REPEATED_SUBQUERIES"
+  },
+  {
+    "id": 8,
+    "sql": "SELECT state, name FROM `bigquery-public-data.usa_names.usa_1910_current` WHERE name LIKE '%john'",
+    "expected_anti_pattern": "Non-Sargable LIKE Leading Wildcard",
+    "expected_category": "PERFORMANCE",
+    "expected_rule_id": "RULE_021_NON_SARGABLE_PATTERN"
+  },
+  {
+    "id": 9,
+    "sql": "SELECT a.state, b.name, c.gender, d.number FROM `bigquery-public-data.usa_names.usa_1910_current` a JOIN `bigquery-public-data.usa_names.usa_1910_current` b ON a.year = b.year JOIN `bigquery-public-data.usa_names.usa_1910_current` c ON b.year = c.year JOIN `bigquery-public-data.usa_names.usa_1910_current` d ON c.year = d.year",
+    "expected_anti_pattern": "Large Joins",
+    "expected_category": "PERFORMANCE",
+    "expected_rule_id": "RULE_009_LARGE_JOINS"
+  },
+  {
+    "id": 10,
+    "sql": "SELECT col1, col2, col3, col4, col5, col6, col7, col8, col9, col10, col11, col12, col13, col14, col15, col16, col17, col18, col19, col20, col21 FROM `my_dataset.my_table`",
+    "expected_anti_pattern": "Excessive Columns",
+    "expected_category": "COST",
+    "expected_rule_id": "RULE_005_EXCESSIVE_COLUMNS"
+  },
+  {
+    "id": 11,
+    "sql": "SELECT t1.* FROM `ds.t1` t1 CROSS JOIN `ds.t2` t2",
+    "expected_anti_pattern": "CROSS JOIN",
+    "expected_category": "PERFORMANCE",
+    "expected_rule_id": "RULE_010_CROSS_JOIN"
+  },
+  {
+    "id": 12,
+    "sql": "SELECT * FROM `dataset.partitioned_table`",
+    "expected_anti_pattern": "Missing Partition Filter",
+    "expected_category": "COST",
+    "expected_rule_id": "RULE_003_MISSING_PARTITION_FILTER"
+  },
+  {
+    "id": 13,
+    "sql": "SELECT * FROM `dataset.clustered_table` WHERE unrelated_col = 1",
+    "expected_anti_pattern": "Missing Clustering Filter",
+    "expected_category": "PERFORMANCE",
+    "expected_rule_id": "RULE_004_MISSING_CLUSTERING_FILTER"
+  },
+  {
+    "id": 14,
+    "sql": "SELECT state, gender, year, name, number FROM `bigquery-public-data.usa_names.usa_1910_current` WHERE year = 2020",
+    "expected_anti_pattern": "None (Optimized)",
+    "expected_category": "COST",
+    "expected_rule_id": "NONE"
+  },
+  {
+    "id": 15,
+    "sql": "SELECT repository.name FROM `bigquery-public-data.samples.github_nested`",
+    "expected_anti_pattern": "None (Optimized)",
+    "expected_category": "COST",
+    "expected_rule_id": "NONE"
+  },
+  {
+    "id": 16,
+    "sql": "SELECT * FROM `bigquery-public-data.samples.github_timeline`",
+    "expected_anti_pattern": "SELECT *",
+    "expected_category": "COST",
+    "expected_rule_id": "RULE_001_SELECT_STAR"
+  },
+  {
+    "id": 17,
+    "sql": "SELECT name FROM `bigquery-public-data.usa_names.usa_1910_current` WHERE UPPER(name) = 'ALICE'",
+    "expected_anti_pattern": "Non-Sargable Predicate",
+    "expected_category": "PERFORMANCE",
+    "expected_rule_id": "RULE_021_NON_SARGABLE_PATTERN"
+  },
+  {
+    "id": 18,
+    "sql": "SELECT a.name FROM `dataset.table_a` a JOIN `dataset.table_b` b ON 1=1",
+    "expected_anti_pattern": "CROSS JOIN",
+    "expected_category": "PERFORMANCE",
+    "expected_rule_id": "RULE_010_CROSS_JOIN"
+  },
+  {
+    "id": 19,
+    "sql": "SELECT name, number FROM `bigquery-public-data.usa_names.usa_1910_current` ORDER BY name",
+    "expected_anti_pattern": "ORDER BY without LIMIT",
+    "expected_category": "PERFORMANCE",
+    "expected_rule_id": "RULE_011_UNNECESSARY_ORDER_BY"
+  },
+  {
+    "id": 20,
+    "sql": "SELECT (SELECT SUM(number) FROM `bigquery-public-data.usa_names.usa_1910_current` WHERE year=1990), (SELECT SUM(number) FROM `bigquery-public-data.usa_names.usa_1910_current` WHERE year=1990)",
+    "expected_anti_pattern": "Repeated Subquery",
+    "expected_category": "COST",
+    "expected_rule_id": "RULE_013_REPEATED_SUBQUERIES"
+  }
+]
