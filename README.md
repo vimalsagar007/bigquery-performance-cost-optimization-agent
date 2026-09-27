@@ -4,6 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
 [![Cloud Run Live](https://img.shields.io/badge/Cloud%20Run-Live-success.svg)](https://bq-agent-61256100941.us-central1.run.app/docs)
+[![Postman Collection](https://img.shields.io/badge/Postman-Collection-orange.svg)](postman/BigQuery_Optimization_Agent.postman_collection.json)
 
 An enterprise-grade, AI-powered **BigQuery Performance and Cost Optimization Agent** built with Python 3.12+, FastAPI, Google Cloud BigQuery SDK, `google-genai` (Gemini on Vertex AI), and LangGraph.
 
@@ -11,10 +12,12 @@ The agent analyzes SQL query structure, BigQuery `INFORMATION_SCHEMA` execution 
 
 ---
 
-## 🚀 Live Production Deployment
+## 🚀 Live Production Deployment & Postman Testing
 
 - **Live Service URL**: [https://bq-agent-61256100941.us-central1.run.app](https://bq-agent-61256100941.us-central1.run.app)
 - **Interactive Playground / Docs**: [https://bq-agent-61256100941.us-central1.run.app/docs](https://bq-agent-61256100941.us-central1.run.app/docs)
+- **Postman Collection**: [postman/BigQuery_Optimization_Agent.postman_collection.json](postman/BigQuery_Optimization_Agent.postman_collection.json)
+- **Postman Testing Guide**: [docs/postman-testing-guide.md](docs/postman-testing-guide.md)
 
 ---
 
@@ -87,38 +90,18 @@ The agent analyzes SQL query structure, BigQuery `INFORMATION_SCHEMA` execution 
 
 ---
 
-## 28 Core BigQuery Tools
+## Postman Collection Endpoints
 
-| Tool # | Function Name | Purpose |
-|---|---|---|
-| 1 | `list_datasets(project_id)` | Lists BigQuery datasets |
-| 2 | `list_tables(project_id, dataset_id)` | Lists tables within a dataset |
-| 3 | `get_table_metadata(project_id, dataset_id, table_id)` | Fetches row counts, size, and metadata |
-| 4 | `get_table_schema(project_id, dataset_id, table_id)` | Inspects field types and modes |
-| 5 | `get_partitioning_info(...)` | Analyzes partition column and type |
-| 6 | `get_clustering_info(...)` | Analyzes clustering column order |
-| 7 | `get_recent_query_history(...)` | Queries `INFORMATION_SCHEMA.JOBS_BY_PROJECT` |
-| 8 | `get_expensive_queries(...)` | Ranks top queries by total bytes billed |
-| 9 | `get_slow_queries(...)` | Ranks top queries by slot-ms consumption |
-| 10 | `get_failed_queries(...)` | Identifies failed query executions |
-| 11 | `get_query_by_job_id(...)` | Fetches details for a specific job ID |
-| 12 | `dry_run_query(sql)` | Dry runs SQL to estimate scan size |
-| 13 | `analyze_query(sql)` | Runs full AST and anti-pattern suite |
-| 14 | `detect_select_star(sql)` | Detects `SELECT *` and `SELECT * LIMIT` |
-| 15 | `detect_missing_partition_filter(sql)` | Flags missing filters on partitioned tables |
-| 16 | `detect_missing_clustering_filter(sql)` | Flags missing filters on clustered tables |
-| 17 | `detect_large_joins(sql)` | Detects complex multi-table joins |
-| 18 | `detect_cross_joins(sql)` | Detects Cartesian products / `CROSS JOIN` |
-| 19 | `detect_repeated_subqueries(sql)` | Detects duplicated CTEs/subqueries |
-| 20 | `detect_unnecessary_columns(sql)` | Flags excessive column projections |
-| 21 | `detect_non_sargable_patterns(sql)` | Flags functions on `WHERE` clause columns |
-| 22 | `analyze_bytes_processed(sql)` | Analyzes byte scale (MB, GB, TB) |
-| 23 | `estimate_query_cost(sql)` | Calculates estimated cost using $/TiB rate |
-| 24 | `analyze_slot_usage(...)` | Analyzes aggregate slot-ms and contention |
-| 25 | `analyze_query_performance(...)` | Inspects execution stage breakdown |
-| 26 | `generate_optimized_sql(sql)` | Generates refactored BigQuery SQL |
-| 27 | `generate_optimization_report(sql)` | Assembles complete JSON report |
-| 28 | `compare_original_vs_optimized(...)` | Compares original vs refactored metrics |
+| # | Endpoint | Method | Purpose |
+|---|---|---|---|
+| 1 | `/health` | GET | Operational health check & read-only status |
+| 2 | `/query/dry-run` | POST | Zero-cost dry run byte scan calculation |
+| 3 | `/analyze/query` | POST | Anti-pattern detection & evidence report |
+| 4 | `/history/expensive` | GET | Top expensive queries from INFORMATION_SCHEMA |
+| 5 | `/history/slow` | GET | Top slow queries ranked by slot-ms |
+| 6 | `/table/metadata` | GET | Table partition & clustering inspector |
+| 7 | `/optimize` | POST | Generates refactored SQL & comparison metrics |
+| 8 | `/chat` | POST | Gemini-powered natural language chat agent |
 
 ---
 
