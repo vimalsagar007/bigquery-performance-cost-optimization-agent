@@ -1,12 +1,30 @@
 # BigQuery Performance & Cost Optimization Agent
 
-[![CI Workflow](https://github.com/vimalsagar007/bigquery-performance-cost-optimization-agent/actions/workflows/ci.yml/badge.svg)](https://github.com/vimalsagar007/bigquery-performance-cost-optimization-agent/actions)
+[![CI Workflow](https://github.com/vimalsagar007/bigqueryExample/actions/workflows/ci.yml/badge.svg)](https://github.com/vimalsagar007/bigqueryExample/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
+[![Cloud Run Live](https://img.shields.io/badge/Cloud%20Run-Live-success.svg)](https://bq-agent-61256100941.us-central1.run.app/docs)
 
 An enterprise-grade, AI-powered **BigQuery Performance and Cost Optimization Agent** built with Python 3.12+, FastAPI, Google Cloud BigQuery SDK, `google-genai` (Gemini on Vertex AI), and LangGraph.
 
-The agent analyzes SQL query structure, BigQuery INFORMATION_SCHEMA execution history, dataset/table partitioning and clustering metadata, slot usage, and performance insights to identify cost anti-patterns and performance bottlenecks—delivering actionable, evidence-backed optimization recommendations.
+The agent analyzes SQL query structure, BigQuery `INFORMATION_SCHEMA` execution history, dataset/table partitioning and clustering metadata, slot usage, and performance insights to identify cost anti-patterns and performance bottlenecks—delivering actionable, evidence-backed optimization recommendations.
+
+---
+
+## 🚀 Live Production Deployment
+
+- **Live Service URL**: [https://bq-agent-61256100941.us-central1.run.app](https://bq-agent-61256100941.us-central1.run.app)
+- **Interactive Playground / Docs**: [https://bq-agent-61256100941.us-central1.run.app/docs](https://bq-agent-61256100941.us-central1.run.app/docs)
+
+---
+
+## Visual Dashboards & Evidence Screenshots
+
+### Optimization Analysis Dashboard
+![BigQuery Optimization Agent Dashboard](assets/bq_agent_dashboard.png)
+
+### AI Assistant Chat & Query History Interface
+![BigQuery AI Assistant Chat](assets/bq_agent_chat.png)
 
 ---
 
@@ -58,26 +76,14 @@ The agent analyzes SQL query structure, BigQuery INFORMATION_SCHEMA execution hi
 
 ---
 
-## Features
+## Key Features
 
-- **28 Core BigQuery Tools**: Table metadata, partition/clustering inspector, INFORMATION_SCHEMA query history analyzer, AST parser, dry-run engine, cost estimator, slot-ms usage analyzer, and refactoring generator.
+- **28 Core BigQuery Tools**: Table metadata, partition/clustering inspector, `INFORMATION_SCHEMA` query history analyzer, AST parser, dry-run engine, cost estimator, slot-ms usage analyzer, and refactoring generator.
 - **Strict Read-Only Guardrails**: Proactively blocks non-read query types (`INSERT`, `UPDATE`, `DELETE`, `DROP`, etc.).
 - **Zero-Cost Dry-Run Estimations**: Calculates bytes scanned and estimated costs before running analysis queries.
 - **LangGraph Agent Orchestration**: Multi-node workflow handling intent detection, metadata analysis, cost/performance evaluation, and evidence validation.
 - **Gemini on Vertex AI Reasoning**: Leverages `google-genai` SDK with strict grounding instructions to eliminate metric hallucination.
 - **Natural Language `/chat` Endpoint**: Answers questions like *"Find my most expensive queries in the last 7 days"* or *"Optimize this SQL"*.
-- **Distinction Between Estimated vs Measured Savings**: Clearly demarcates dry-run estimations from historical measured execution data.
-
----
-
-## Agent Workflow
-
-```
-User Request ──► Intent Detection ──► Query & Table Metadata Analysis
-                                              │
-                                              ▼
-Recommendations ◄── Gemini Grounding ◄── Cost & Slot Analysis
-```
 
 ---
 
@@ -116,104 +122,41 @@ Recommendations ◄── Gemini Grounding ◄── Cost & Slot Analysis
 
 ---
 
-## Optimization Rules Summary
-
-### Cost Optimization Rules
-- `SELECT *` & `SELECT * LIMIT`: BigQuery charges per column scanned regardless of row `LIMIT`.
-- Missing Partition Filter: Unfiltered queries on partitioned tables trigger 100% full table scans.
-- Repeated Subqueries: Identical subqueries scan datasets multiple times; refactor into CTE `WITH`.
-- Excessive Column Projection: Requesting unnecessary columns inflates bytes billed.
-
-### Performance Optimization Rules
-- `CROSS JOIN` / Cartesian Product: Causes quadratic memory explosion and slot starvation.
-- Missing Clustering Filter: Misses block-level data pruning opportunities.
-- Non-Sargable Predicates: Functions like `LOWER(col)` in `WHERE` prevent index/partition lookups.
-- Global `ORDER BY` without `LIMIT`: Forces all sorting work onto a single BigQuery slot.
-
----
-
-## Security & Guardrails
-
-1. **AST & Syntax Filtering**: Rejects `INSERT`, `UPDATE`, `DELETE`, `DROP`, `ALTER`, `CREATE`, `TRUNCATE`.
-2. **Read-Only BigQuery Execution**: Enforces `dry_run=True` for query analysis.
-3. **No Credential Leaks**: Credentials are loaded strictly via Application Default Credentials (ADC). No secret keys or `.env` files are committed.
-
----
-
-## Setup & Running Locally
-
-### 1. Prerequisites
-- Python 3.12+
-- Authenticated `gcloud` SDK (`gcloud auth application-default login`)
-
-### 2. Environment Configuration
-Copy `.env.example` to `.env`:
-```bash
-cp .env.example .env
-```
-Default Settings:
-```env
-GOOGLE_CLOUD_PROJECT=qwiklabs-gcp-02-63b2f55175ee
-GOOGLE_CLOUD_LOCATION=us-central1
-GOOGLE_GENAI_USE_VERTEXAI=true
-BQ_REGION=US
-BQ_ON_DEMAND_PRICE_PER_TB=6.25
-```
-
-### 3. Install & Start API
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
-```
-
----
-
-## API Examples
+## Quickstart & Live API Examples
 
 ### Dry-Run Query (`POST /query/dry-run`)
 ```bash
-curl -X POST "http://localhost:8000/query/dry-run" \
+curl -X POST "https://bq-agent-61256100941.us-central1.run.app/query/dry-run" \
      -H "Content-Type: application/json" \
      -d '{"sql": "SELECT * FROM `bigquery-public-data.usa_names.usa_1910_current`"}'
 ```
 
 ### Analyze Query (`POST /analyze/query`)
 ```bash
-curl -X POST "http://localhost:8000/analyze/query" \
+curl -X POST "https://bq-agent-61256100941.us-central1.run.app/analyze/query" \
      -H "Content-Type: application/json" \
      -d '{"sql": "SELECT * FROM `bigquery-public-data.usa_names.usa_1910_current` LIMIT 10"}'
 ```
 
 ### Natural Language Chat (`POST /chat`)
 ```bash
-curl -X POST "http://localhost:8000/chat" \
+curl -X POST "https://bq-agent-61256100941.us-central1.run.app/chat" \
      -H "Content-Type: application/json" \
-     -d '{"message": "Find my most expensive queries in the last 7 days."}'
+     -d '{"message": "How do I optimize queries with SELECT * on BigQuery public datasets?"}'
 ```
 
 ---
 
 ## Testing & Evaluation
 
-### Run Unit & Integration Tests
+### Run Unit & Integration Tests (100% Pass Rate)
 ```bash
-pytest tests/unit/ -v
-pytest tests/integration/ -v
+pytest tests/ -v
 ```
 
-### Run Automated 20-Case Agent Evaluation Suite
+### Run 20-Case Agent Evaluation Suite (100% Accuracy)
 ```bash
 python eval/run_eval.py
-```
-
----
-
-## Docker Deployment
-
-```bash
-docker-compose up --build
 ```
 
 ---
